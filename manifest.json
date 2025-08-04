@@ -1,19 +1,19 @@
 {
   "name": "WVSSM Registration",
   "short_name": "WVSSM",
-  "start_url": "./",
+  "start_url": "https://shaviyanipublichealth.github.io/register/",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#007bff",
   "description": "Registration for Web-based Vaccination Supplies Stock Management (WVSSM)",
   "icons": [
     {
-      "src": "/icons/icon-192.png",
+      "src": "https://shaviyanipublichealth.github.io/register/icons/icon-192.png",
       "sizes": "192x192",
       "type": "image/png"
     },
     {
-      "src": "/icons/icon-512.png",
+      "src": "https://shaviyanipublichealth.github.io/register/icons/icon-512.png",
       "sizes": "512x512",
       "type": "image/png"
     }
