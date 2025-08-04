@@ -57,15 +57,19 @@
             </div>
 
             <form name="submit-to-google-sheet" id="registrationForm">
-              <div class="mb-3">
-                <label for="idNumber" class="form-label">ID Number</label>
-                <input type="text" class="form-control" id="idNumber" name="idNumber" required autocomplete="off">
-              </div>
+  <div class="mb-3">
+    <label for="idNumber" class="form-label">ID Number</label>
+    <input type="text" class="form-control" id="idNumber" name="idNumber"
+      pattern="A\d{6}"
+      title="ID must start with 'A' followed by 6 digits (e.g. A123456)"
+      required autocomplete="off">
+    <div class="form-text text-muted">ID must start with 'A' followed by 6 digits (e.g. A123456)</div>
+  </div>
 
-              <div class="mb-3">
-                <label for="confirmIdNumber" class="form-label">Confirm ID Number</label>
-                <input type="text" class="form-control" id="confirmIdNumber" required autocomplete="off" onpaste="return false;">
-              </div>
+  <div class="mb-3">
+    <label for="confirmIdNumber" class="form-label">Confirm ID Number</label>
+    <input type="text" class="form-control" id="confirmIdNumber" required autocomplete="off" onpaste="return false;">
+  </div>
 
               <div class="mb-3">
                 <label for="firstName" class="form-label">First Name</label>
@@ -135,28 +139,33 @@
       });
   </script>
 
-  <!-- Form Validation -->
-  <script>
-    const idInput = document.getElementById('idNumber');
-    const confirmIdInput = document.getElementById('confirmIdNumber');
-    const emailInput = document.getElementById('email');
-    const confirmEmailInput = document.getElementById('confirmEmail');
-    const submitBtn = document.getElementById('submitBtn');
+  <!-- Form Validation Script -->
+<script>
+  const idInput = document.getElementById('idNumber');
+  const confirmIdInput = document.getElementById('confirmIdNumber');
+  const emailInput = document.getElementById('email');
+  const confirmEmailInput = document.getElementById('confirmEmail');
+  const submitBtn = document.getElementById('submitBtn');
 
-    function validateConfirmations() {
-      const idMatch = idInput.value === confirmIdInput.value;
-      const emailMatch = emailInput.value === confirmEmailInput.value;
+  function validateConfirmations() {
+    const idPattern = /^A\d{6}$/;
+    const idValid = idPattern.test(idInput.value);
+    const idMatch = idValid && (idInput.value === confirmIdInput.value);
+    const emailMatch = emailInput.value === confirmEmailInput.value;
 
-      confirmIdInput.classList.toggle('is-invalid', !idMatch);
-      confirmEmailInput.classList.toggle('is-invalid', !emailMatch);
+    // Add/remove invalid styles
+    idInput.classList.toggle('is-invalid', !idValid && idInput.value.length > 0);
+    confirmIdInput.classList.toggle('is-invalid', !idMatch && confirmIdInput.value.length > 0);
+    confirmEmailInput.classList.toggle('is-invalid', !emailMatch && confirmEmailInput.value.length > 0);
 
-      submitBtn.disabled = !(idMatch && emailMatch);
-    }
+    // Enable submit only if all valid and matched
+    submitBtn.disabled = !(idMatch && emailMatch);
+  }
 
-    [idInput, confirmIdInput, emailInput, confirmEmailInput].forEach(input => {
-      input.addEventListener('input', validateConfirmations);
-    });
-  </script>
+  [idInput, confirmIdInput, emailInput, confirmEmailInput].forEach(input => {
+    input.addEventListener('input', validateConfirmations);
+  });
+</script>
 
   <!-- Form Submission -->
   <script>
