@@ -1,10 +1,10 @@
 const CACHE_NAME = 'wvssm-cache-v1';
 const URLS_TO_CACHE = [
-  '/',
-  '/index.html',
-  '/manifest.json',
-  '/icons/icon-192.png',
-  '/icons/icon-512.png',
+  '/register/',
+  '/register/index.html',
+  '/register/manifest.json',
+  '/register/icons/icon-192.png',
+  '/register/icons/icon-512.png',
   'https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css',
   'https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/css/tom-select.css',
   'https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/js/tom-select.complete.min.js'
