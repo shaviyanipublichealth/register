@@ -57,18 +57,30 @@
             </div>
 
             <form name="submit-to-google-sheet" id="registrationForm">
-  <div class="mb-3">
+ <div class="mb-3">
     <label for="idNumber" class="form-label">ID Number</label>
-    <input type="text" class="form-control" id="idNumber" name="idNumber"
-      pattern="A\d{6}"
-      title="ID must start with 'A' followed by 6 digits (e.g. A123456)"
-      required autocomplete="off">
-    <div class="form-text text-muted">ID must start with 'A' followed by 6 digits (e.g. A123456)</div>
+    <input
+      type="text"
+      class="form-control"
+      id="idNumber"
+      name="idNumber"
+      required
+      autocomplete="off"
+      maxlength="7"
+      placeholder="A123456"
+    />
   </div>
 
   <div class="mb-3">
     <label for="confirmIdNumber" class="form-label">Confirm ID Number</label>
-    <input type="text" class="form-control" id="confirmIdNumber" required autocomplete="off" onpaste="return false;">
+    <input
+      type="text"
+      class="form-control"
+      id="confirmIdNumber"
+      required
+      autocomplete="off"
+      onpaste="return false;"
+    />
   </div>
 
               <div class="mb-3">
@@ -147,26 +159,52 @@
   const confirmEmailInput = document.getElementById('confirmEmail');
   const submitBtn = document.getElementById('submitBtn');
 
+  // ID Number live validation with alerts
+  idInput.addEventListener('input', () => {
+    let val = idInput.value.toUpperCase();
+    idInput.value = val;
+
+    if (val.length === 0) return;
+
+    if (val[0] !== 'A') {
+      alert("ID must start with the letter 'A'");
+      idInput.value = '';
+      return;
+    }
+
+    if (val.length > 7) {
+      idInput.value = val.slice(0, 7);
+      return;
+    }
+
+    const afterA = val.slice(1);
+    if (/[^0-9]/.test(afterA)) {
+      alert("After 'A', only digits are allowed (no letters)");
+      idInput.value = val.slice(0, -1);
+      return;
+    }
+
+    validateConfirmations();
+  });
+
+  // Validate confirmation fields and enable submit button
   function validateConfirmations() {
     const idPattern = /^A\d{6}$/;
     const idValid = idPattern.test(idInput.value);
     const idMatch = idValid && (idInput.value === confirmIdInput.value);
     const emailMatch = emailInput.value === confirmEmailInput.value;
 
-    // Add/remove invalid styles
-    idInput.classList.toggle('is-invalid', !idValid && idInput.value.length > 0);
     confirmIdInput.classList.toggle('is-invalid', !idMatch && confirmIdInput.value.length > 0);
     confirmEmailInput.classList.toggle('is-invalid', !emailMatch && confirmEmailInput.value.length > 0);
+    idInput.classList.toggle('is-invalid', !idValid && idInput.value.length > 0);
 
-    // Enable submit only if all valid and matched
     submitBtn.disabled = !(idMatch && emailMatch);
   }
 
-  [idInput, confirmIdInput, emailInput, confirmEmailInput].forEach(input => {
+  [confirmIdInput, emailInput, confirmEmailInput].forEach(input => {
     input.addEventListener('input', validateConfirmations);
   });
 </script>
-
   <!-- Form Submission -->
   <script>
     const scriptURL = 'https://script.google.com/macros/s/AKfycbwvI20Y_Tdzi3dE5p0eBARxxcEMUQ9YFNPD1PEhjbmkt0-mH6sg-yIQGWOVe_pr5QlK/exec';
