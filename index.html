@@ -154,56 +154,77 @@
   <!-- Form Validation Script -->
 <script>
   const idInput = document.getElementById('idNumber');
-  const confirmIdInput = document.getElementById('confirmIdNumber');
-  const emailInput = document.getElementById('email');
-  const confirmEmailInput = document.getElementById('confirmEmail');
-  const submitBtn = document.getElementById('submitBtn');
+const confirmIdInput = document.getElementById('confirmIdNumber');
+const emailInput = document.getElementById('email');
+const confirmEmailInput = document.getElementById('confirmEmail');
+const submitBtn = document.getElementById('submitBtn');
 
-  // ID Number live validation with alerts
-  idInput.addEventListener('input', () => {
-    let val = idInput.value.toUpperCase();
-    idInput.value = val;
+let idAlertShown = false;
+let confirmIdAlertShown = false;
+let emailAlertShown = false;
 
-    if (val.length === 0) return;
+function validateIdField(input) {
+  let val = input.value.toUpperCase();
+  input.value = val;
 
-    if (val[0] !== 'A') {
-      alert("ID must start with the letter 'A'");
-      idInput.value = '';
-      return;
-    }
+  if (val.length === 0) return true;
 
-    if (val.length > 7) {
-      idInput.value = val.slice(0, 7);
-      return;
-    }
-
-    const afterA = val.slice(1);
-    if (/[^0-9]/.test(afterA)) {
-      alert("After 'A', only digits are allowed (no letters)");
-      idInput.value = val.slice(0, -1);
-      return;
-    }
-
-    validateConfirmations();
-  });
-
-  // Validate confirmation fields and enable submit button
-  function validateConfirmations() {
-    const idPattern = /^A\d{6}$/;
-    const idValid = idPattern.test(idInput.value);
-    const idMatch = idValid && (idInput.value === confirmIdInput.value);
-    const emailMatch = emailInput.value === confirmEmailInput.value;
-
-    confirmIdInput.classList.toggle('is-invalid', !idMatch && confirmIdInput.value.length > 0);
-    confirmEmailInput.classList.toggle('is-invalid', !emailMatch && confirmEmailInput.value.length > 0);
-    idInput.classList.toggle('is-invalid', !idValid && idInput.value.length > 0);
-
-    submitBtn.disabled = !(idMatch && emailMatch);
+  if (val[0] !== 'A') {
+    alert("ID must start with the letter 'A'");
+    input.value = '';
+    return false;
   }
 
-  [confirmIdInput, emailInput, confirmEmailInput].forEach(input => {
-    input.addEventListener('input', validateConfirmations);
-  });
+  if (val.length > 7) {
+    input.value = val.slice(0, 7);
+  }
+
+  const afterA = val.slice(1);
+  if (/[^0-9]/.test(afterA)) {
+    alert("After 'A', only digits are allowed (no letters)");
+    input.value = val.slice(0, -1);
+    return false;
+  }
+
+  return true;
+}
+
+function validateConfirmations() {
+  // Validate format on both fields
+  const idValid = validateIdField(idInput);
+  const confirmIdValid = validateIdField(confirmIdInput);
+
+  // Check match and validity
+  const idMatch = idValid && confirmIdValid && (idInput.value === confirmIdInput.value);
+  const emailMatch = emailInput.value === confirmEmailInput.value;
+
+  // Toggle invalid class for styling
+  idInput.classList.toggle('is-invalid', !idValid && idInput.value.length > 0);
+  confirmIdInput.classList.toggle('is-invalid', !idMatch && confirmIdInput.value.length > 0);
+  confirmEmailInput.classList.toggle('is-invalid', !emailMatch && confirmEmailInput.value.length > 0);
+
+  // Enable submit only if all match & valid
+  submitBtn.disabled = !(idMatch && emailMatch);
+
+  // Alerts on mismatch (only once)
+  if (!idMatch && confirmIdInput.value.length > 0 && !confirmIdAlertShown) {
+    alert('❌ ID Number confirmation does not match!');
+    confirmIdAlertShown = true;
+  }
+  if (idMatch) confirmIdAlertShown = false;
+
+  if (!emailMatch && confirmEmailInput.value.length > 0 && !emailAlertShown) {
+    alert('❌ Email confirmation does not match!');
+    emailAlertShown = true;
+  }
+  if (emailMatch) emailAlertShown = false;
+}
+
+// Attach listeners to inputs
+[idInput, confirmIdInput, emailInput, confirmEmailInput].forEach(input => {
+  input.addEventListener('input', validateConfirmations);
+});
+
 </script>
   <!-- Form Submission -->
   <script>
